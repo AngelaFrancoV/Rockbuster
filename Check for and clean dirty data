@@ -1,0 +1,61 @@
+### Non-uniform
+
+SELECT DISTINCT 
+       film_id, 
+       title, 
+       release_year, 
+       language_id, 
+       rental_duration, 
+       rental_rate, 
+       rating, 
+       last_update 
+FROM film
+GROUP BY
+      film_id, 
+      title, 
+      release_year, 
+      language_id, 
+      rental_duration, 
+      rental_rate, 
+      rating, 
+      last_update
+
+
+### Duplicate data
+
+SELECT 
+  film_id, 
+  title,
+  release_year, 
+  language_id,
+  rental_duration,
+  rental_rate, 
+COUNT(*)
+FROM film
+GROUP BY 
+  film_id, 
+  title,
+  release_year, 
+  language_id,
+  rental_duration,
+  rental_rate, 
+HAVING COUNT(*) >1;
+
+
+### Missing values
+
+SELECT *
+FROM film
+WHERE film_id IS NULL
+ OR title IS NULL
+ OR description IS NULL
+ OR release_year IS NULL
+ OR language_id IS NULL
+ OR rental_duration IS NULL
+ OR rental_rate IS NULL
+ OR length IS NULL
+ OR replacement_cost IS NULL
+ OR rating IS NULL
+ OR last_update IS NULL
+ OR special_features IS NULL
+ OR fulltext IS NULL;
