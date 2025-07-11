@@ -1,0 +1,85 @@
+### Top 10 countries in terms of customer numbers
+SELECT 
+    D.country,
+    COUNT(A.customer_id) AS customer_count
+FROM customer A
+ JOIN address B ON A.address_id = B.address_id
+ JOIN city C ON B.city_id = C.city_id
+ JOIN country D ON C.country_id = D.country_id
+GROUP BY D.country
+ORDER BY customer_count DESC
+LIMIT 10;
+
+
+### Top 10 cities that fall within the top 10 countries
+SELECT
+   D.country,
+   C.city,
+COUNT(A.customer_id) AS total_customers
+FROM customer A
+   JOIN address B ON A.address_id = B.address_id
+   JOIN city C ON B.city_id = C.city_id
+   JOIN country D ON C.country_id = D.country_id
+   WHERE D.country IN (SELECT D.country
+               FROM customer A
+               JOIN address B ON A.address_id = B.address_id
+               JOIN city C ON B.city_id = C.city_id
+               JOIN country D ON C.country_id = D.country_id
+               GROUP BY D.country
+               ORDER BY COUNT(A.customer_id) DESC
+                LIMIT 10)
+GROUP BY D.country, C.city
+ORDER BY COUNT(A.customer_id) DESC
+LIMIT 10;
+
+
+### Top 5 customers from the top 10 cities who’ve paid the highest total amounts to Rockbuster
+SELECT
+ CUS.customer_id,
+ CUS.first_name,
+ CUS.last_name,
+ CO.country,
+ CI.city,
+SUM(PAY.amount) AS total_amount_paid
+FROM payment PAY
+ JOIN customer CUS ON PAY.customer_id = CUS.customer_id
+ JOIN address AD ON CUS.address_id = AD.address_id
+ JOIN city CI ON AD.city_id = CI.city_id
+ JOIN country CO ON CI.country_id = CO.country_id
+WHERE CI.city IN (
+ SELECT 
+ CI.city
+FROM
+ customer CUS
+ JOIN address AD ON CUS.address_id = AD.address_id
+ JOIN city CI ON AD.city_id = CI.city_id
+ JOIN country CO ON CI.country_id = CO.country_id
+WHERE
+ CO.country IN (
+ SELECT
+ CO.country
+FROM
+ customer CUS
+ JOIN address AD ON CUS.address_id = AD.address_id
+ JOIN city CI ON AD.city_id = CI.city_id
+ JOIN country CO ON CI.country_id = CO.country_id
+GROUP BY
+ CO.country
+ ORDER BY
+ COUNT(CUS.customer_id) DESC
+LIMIT 10)
+GROUP BY
+ CO.country,
+ CI.city
+ORDER BY
+ COUNT(CUS.customer_id) DESC
+LIMIT 10)
+GROUP BY
+ CUS.customer_id,
+ CUS.first_name,
+ CUS.last_name,
+ CO.country,
+ CI.city
+ORDER BY
+ SUM(PAY.amount) DESC
+LIMIT 5;
