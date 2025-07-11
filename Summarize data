@@ -1,0 +1,15 @@
+### Numerical values
+
+SELECT MIN(rental_duration) AS Min_rental_duration,
+       MAX(rental_duration) AS Max_rental_duration,
+       AVG(rental_duration) AS Avg_rental_duration,
+	   MIN(rental_rate) AS Min_rental_rate,
+	   MAX(rental_rate) AS Max_rental_rate,
+	   AVG(rental_rate) AS AVg_rental_rate,
+	   MIN(length) AS Min_length,
+	   MAX(length) AS Max_lenth,
+	   AVG(length) AS Avg_length,
+	   MIN(replacement_cost) AS Min_replacement_cost,
+	   MAX(replacement_cost) AS Max_replacement_cost,
+	   AVG(replacement_cost) AS Avg_replacement_cost
+FROM film;
